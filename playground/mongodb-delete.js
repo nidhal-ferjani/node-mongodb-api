@@ -15,8 +15,24 @@ MongoClient.connect(url,(err,client) => {
         var collection = db.collection('Todos');
 
        
+        collection.deleteOne({ _id  : new ObjectID("5b8bccab34f92e2b70ff1f4d")}).then((result) => {
+            console.log(result);
+        },(err) => {
 
-        collection.findOneAndDelete({ _id  : new ObjectID("5b8bccab34f92e2b70ff1f4d")}).then((result) => {
+          console.log('Unable to delete Todo',err);
+
+        });
+
+        collection.deleteMany({completed : true }).then((result) => {
+        },(err) => {
+
+
+
+        });
+
+
+
+        collection.findOneAndDelete({ _id  : new ObjectID("5b8e97d6aaad256a5acb5aa9")}).then((result) => {
             console.log(JSON.stringify(result,undefined,2));
         },(err) => {
 
