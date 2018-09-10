@@ -34,19 +34,10 @@ app.post('/todos',(req,res) => {
 
 
 
-
-
-
-// newUser.save().then((doc)=> {
-//     console.log(JSON.stringify(doc,undefined,2));
-// },(err) => {
-//     console.log(colors.error(`Unabe to save Todo : ${err}`));
-// });
-
-
-
-
 app.listen(3500,() => {
     
         console.log('Server is up in port 3500');
     });
+
+
+    module.exports = { app };
