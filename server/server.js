@@ -1,6 +1,7 @@
 const {colors} = require('../config/configure');
 var express = require('express');
 var bodyParser = require('body-parser');
+var {ObjectID} = require('mongodb');
 
 var app = express();
 
@@ -33,7 +34,28 @@ app.post('/todos',(req,res) => {
 });
 
 
+
 /*****************************************************************************************/
+
+app.get('/todos/:id',(req,res) => {
+    
+        var id = req.params.id;
+
+        if(!ObjectID.isValid(id)){
+          return res.status(404).send();
+        }
+       
+        Todo.findById(id).then((todo) => {
+
+            (!todo) ?  res.status(404).send() :  res.send({todo});
+
+        },(err) => {
+            res.status(400).send(err);
+        })
+    });
+
+
+/********************************************************************************************/
 
 app.use('/todos',(req,res) => {
 
@@ -48,7 +70,7 @@ app.use('/todos',(req,res) => {
 
 });
 
-
+/*********************************************************************************************/
 
 app.listen(3500,() => {
     
