@@ -33,6 +33,22 @@ app.post('/todos',(req,res) => {
 });
 
 
+/*****************************************************************************************/
+
+app.use('/todos',(req,res) => {
+
+  Todo.find().then((todos) => {
+
+    res.send({
+         todos
+    });
+  },(err) => {
+       res.status(400).send(err);
+  })
+
+});
+
+
 
 app.listen(3500,() => {
     
