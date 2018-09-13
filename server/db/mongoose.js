@@ -5,7 +5,7 @@ mongoose.Promise = global.Promise;
 
 const urlDB = 'mongodb://localhost:27017/TodoApp';
 
-mongoose.connect(urlDB);
+mongoose.connect('mongodb://nidhal:azertyuiop1234@ds255282.mlab.com:55282/db-todos' || 'mongodb://localhost:27017/TodoApp' );
 
 mongoose.connection
 .on('error',(err) => {
