@@ -9,6 +9,8 @@ var app = express();
 
 app.use(bodyParser.json());
 
+app.set('port',port);
+
 
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
@@ -74,9 +76,9 @@ app.use('/todos',(req,res) => {
 
 /*********************************************************************************************/
 
-app.listen(port,() => {
+app.listen(app.get('port'),() => {
     
-        console.log(`Server Started up at port ${port}`);
+        console.log(`Server Started up at port ${app.get('port')}`);
     });
 
 
