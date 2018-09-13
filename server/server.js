@@ -11,7 +11,6 @@ app.use(bodyParser.json());
 
 app.set('port',port);
 
-
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
