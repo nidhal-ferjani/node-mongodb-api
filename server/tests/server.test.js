@@ -8,7 +8,9 @@ const {User} = require('../models/user');
 
 const todos = [
   { _id : new ObjectID(),
-    text : 'first text for todos'},
+    text : 'first text for todos',
+    completed : true
+  },
   { _id : new ObjectID(),
     text : 'second text for todos'}
 ]
@@ -202,3 +204,55 @@ describe('DELETE /todos/:id',() => {
           });
 
   });
+
+//******************************************************************************/
+/**                 Test PATCH /todos/:id                                  ****/
+/*******************************************************************************/
+
+
+describe('PATCH /todos/:id',() => {
+
+it('Should Update  todo by ID',(done) => {
+
+   var text = 'nidhal tnek sayé';
+   var completed = true;
+
+  request(app)
+  .patch(`/todos/${todos[0]._id.toHexString()}`)
+  .send({text,completed})
+  .expect(200)
+  .expect((res) => {
+     expect(res.body.todo.text).toBe(text);
+     expect(res.body.todo.completed).toBe(true);
+     expect(res.body.todo.completedAt).toBeA('number');
+
+
+  })
+  .end(done);
+
+});
+
+
+it('should return 404 if todo not found',(done) => {
+  
+         var idHex = new ObjectID().toHexString();
+  
+        request(app)
+        .patch( `/todos/${idHex}`)
+        .expect(404)
+        .end(done);
+  
+      });
+  
+      it('should return 404 if not-Object ID',(done) => {
+        
+                    
+              request(app)
+              .patch( `/todos/12457`)
+              .expect(404)
+              .end(done);
+        
+            });
+  
+    });
+  
