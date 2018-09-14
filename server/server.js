@@ -1,16 +1,18 @@
+require('../config/config');
+
 const _ = require('lodash');
 const {colors} = require('../config/configure');
 const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
 
-const port = process.env.PORT || 3500 ;
+//const port = process.env.PORT || 3500 ;
 
 var app = express();
 
 app.use(bodyParser.json());
 
-//app.set('port',process.env.PORT || 3500);
+app.set('port',process.env.PORT);
 
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
@@ -122,9 +124,9 @@ app.patch('/todos/:id', (req,res) => {
 
 /*********************************************************************************************/
 
-app.listen(port,() => {
+app.listen(app.get('port'),() => {
     
-        console.log(`Server Started up at port ${port}`);
+        console.log(`Server Started up at port ${app.get('port')}`);
     });
 
 
