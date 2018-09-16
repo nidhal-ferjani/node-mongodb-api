@@ -5,7 +5,7 @@ const {colors} = require('../config/configure');
 const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
-
+const {authenticate} = require('./middleware/authenticate');
 //const port = process.env.PORT || 3500 ;
 
 var app = express();
@@ -130,7 +130,7 @@ app.post('/users',(req,res) => {
 
   var user = new User(body);
 
-  console.log('user = ',user);
+ 
 
   user.save().then(() =>{   
     return user.generateAuthToken();
@@ -143,6 +143,14 @@ app.post('/users',(req,res) => {
    });
 
 
+});
+/*********************************************************************************************/
+
+
+app.get('/users/me',authenticate,(req,res) => {
+
+    res.send(req.user);
+    
 });
 
 
