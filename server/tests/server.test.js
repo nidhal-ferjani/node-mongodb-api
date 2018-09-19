@@ -6,26 +6,24 @@ const {ObjectID} = require('mongodb');
 const {Todo} = require('../models/todo');
 const {User} = require('../models/user');
 
-const todos = [
-  { _id : new ObjectID(),
-    text : 'first text for todos',
-    completed : true
-  },
-  { _id : new ObjectID(),
-    text : 'second text for todos'}
-]
+const {todos,populateTodos,users,populateUsers} = require('./seed/seed');
 
+
+
+// const todos = [
+//   { _id : new ObjectID(),
+//     text : 'first text for todos',
+//     completed : true
+//   },
+//   { _id : new ObjectID(),
+//     text : 'second text for todos'}
+// ]
 
 //******************************************************************************/
 /**                 Test POST /todos                                        ****/
 /*******************************************************************************/
-
-beforeEach((done) => {
- 
-  Todo.remove({}).then(() =>{
-    return Todo.insertMany(todos);
-}).then(() => done());
-});
+ beforeEach(populateUsers);
+ beforeEach(populateTodos);
 
 
 
@@ -255,4 +253,106 @@ it('should return 404 if todo not found',(done) => {
             });
   
     });
+//******************************************************************************/
+/**                 Test GET /users/me                                     ****/
+/*******************************************************************************/
+
+
+describe('GET /users/me',() => {
   
+  it('Should return user if authenticated',(done) => {
+
+
+    request(app)
+    .get('/users/me')
+    .set('x-auth',users[0].tokens[0].token)
+    .expect(200)
+    .expect((res) => {
+      
+     
+      expect(res.body._id).toBe(users[0]._id.toHexString());
+      expect(res.body.email).toBe(users[0].email);
+
+
+    })
+    .end(done);
+
+  });
+
+
+  it('Should return 401 if user not authenticated',(done) => {
+    
+    request(app)
+    .get('/users/me')
+    .expect(401)
+    .expect((res) => {
+      
+      expect(res.body).toEqual({});
+       
+
+    })
+    .end(done)
+
+  });
+
+});
+
+
+//******************************************************************************/
+/**                 Test GET /users/me                                     ****/
+/*******************************************************************************/
+
+describe('POST /users',() => {
+  
+  it('Should create a user ',(done) => {
+
+
+    let email = 'nidhouch.ferk2kk@gmail.com';
+    let password = 'legfsje12';
+
+    request(app)
+    .post('/users')
+    .send({email,password})
+    .expect(200)
+    .expect((res) => {
+         // console.log(res.headers['x-auth'])
+          expect(res.body._id).toExist();
+          expect(res.headers['x-auth']).toExist();
+          expect(res.body.email).toBe(email);
+          
+ 
+    })
+    .end((err) => {
+
+       if(err){
+
+        return done(err);
+       }
+
+       User.findOne({email}).then((user) => {
+        // console.log(user)
+         
+         expect(user).toExist();
+         done();
+
+       }).catch((err) => done(err));
+
+
+    });
+
+  });
+
+
+  it('Should not creat user with invalid data',(done) => {
+
+    let email = 'nidhouch.ferhjhj@gmail.com';
+    let password = 'legf';
+
+    request(app)
+    .post('/users')
+    .send({email,password})
+    .expect(400)
+    .end(done);
+});
+
+});

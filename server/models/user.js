@@ -83,11 +83,11 @@ UserSchema.methods.generateAuthToken = function (){
       return Promise.reject();
     }
    
-  return  User.findOne({
+  return  Promise.resolve(User.findOne({
         '_id' : decoded._id,
         'tokens.token' : token,
          'tokens.access' : 'auth'
-    });
+    }));
 
   };
 
@@ -95,9 +95,7 @@ UserSchema.methods.generateAuthToken = function (){
 
     var user = this;
 
-   
-
-    if(user.isModified('password')){
+   if(user.isModified('password')){
      bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(user.password, salt, function(err, hash) {
            user.password = hash;
