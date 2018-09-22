@@ -113,7 +113,7 @@ UserSchema.methods.generateAuthToken = function (){
 });
 
 
-UserSchema.statics.findByCredentials = function(email,password,callback){
+UserSchema.statics.findByCredentials = function(email,password){
 
 let User = this ;
 
@@ -137,6 +137,19 @@ let User = this ;
      });
 
  });
+
+};
+
+
+UserSchema.methods.removeToken = function(token) {
+
+    let user = this;
+
+   return user.update({
+       $pull : {
+           tokens : { token }
+       }
+    });
 
 };
 

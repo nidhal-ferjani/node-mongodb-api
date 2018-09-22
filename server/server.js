@@ -160,6 +160,10 @@ app.post('/users/login',(req,res) => {
 
     let body = _.pick(req.body,['email','password']);
    
+/************************************************************************/
+/**************     With Promise function                      **********/
+/************************************************************************/
+
     User.findByCredentials(body.email,body.password).then((user) => {
      
        return user.generateAuthToken().then((token) => {
@@ -169,6 +173,10 @@ app.post('/users/login',(req,res) => {
         });
     
     }).catch((err) => res.status(400).send());
+
+/************************************************************************/
+/**************     With callback function                     **********/
+/************************************************************************/
 
 
  /* User.findByCredentials(body.email,body.password,(err,user)=>{
@@ -189,7 +197,19 @@ app.post('/users/login',(req,res) => {
 
 });
 
+/*********************************************************************************************/
 
+
+app.delete('/users/me/token',authenticate,(req,res) => {
+    
+        req.user.removeToken(req.token).then(()=>{
+
+            res.status(200).send();
+
+        },() => res.status(400).send());
+
+        
+    });
 
 /**********************************************************************************************/
 
