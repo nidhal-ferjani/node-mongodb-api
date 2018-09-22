@@ -1,3 +1,5 @@
+
+
 const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
@@ -44,6 +46,7 @@ var UserSchema = new mongoose.Schema({
             }
         }]
 });
+
 
 UserSchema.methods.toJSON = function(){
 
@@ -108,6 +111,34 @@ UserSchema.methods.generateAuthToken = function (){
   
 
 });
+
+
+UserSchema.statics.findByCredentials = function(email,password,callback){
+
+let User = this ;
+
+ return User.findOne({email}).then((user) =>{
+     if(!user){
+        Promise.reject();   //  return callback(err,null) /
+     }
+
+     return new Promise ((resolve,reject) => {
+        
+         bcrypt.compare(password,user.password,(err,res) => {
+        
+            if(res){
+            console.log(user);
+            resolve(user);//  return   callback(null,user);// 
+            }else{
+                reject();//   return     callback(err,null);//
+            }
+   
+         });
+     });
+
+ });
+
+};
 
    var User = mongoose.model('User', UserSchema );
 
